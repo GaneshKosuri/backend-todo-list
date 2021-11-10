@@ -27,7 +27,7 @@ initializeDatabaseAndStartServer();
 
 app.get("/todos/", async (request, response) => {
   const { status = "", priority = "", search_q = "" } = request.query;
-  const getTodosQuery = `
+  const getTODOSQuery = `
     SELECT
     *
     FROM
@@ -35,8 +35,7 @@ app.get("/todos/", async (request, response) => {
     WHERE todo like '%${search_q}%' and status like '%${status}%' and priority like '%${priority}%';
     `;
 
-  const getBooksResponse = await database.all(getTodosQuery);
-  console.log(getBooksResponse);
+  const getBooksResponse = await database.all(getTODOSQuery);
   response.status(200);
   response.send(getBooksResponse);
 });

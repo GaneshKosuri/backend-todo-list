@@ -26,16 +26,35 @@ const initializeDatabaseAndStartServer = async () => {
 initializeDatabaseAndStartServer();
 
 app.get("/todos/", async (request, response) => {
-  const { status = "", priority = "", search_q = "" } = request.query;
+  const {
+    status = "",
+    priority = "",
+    search_q = "",
+    category = "",
+  } = request.query;
   const getTODOSQuery = `
     SELECT
     *
     FROM
      todo
-    WHERE todo like '%${search_q}%' and status like '%${status}%' and priority like '%${priority}%';
+    WHERE todo like '%${search_q}%' and status like '%${status}%' and priority like '%${priority}%' and category like '%${category}%';
     `;
 
-  const getBooksResponse = await database.all(getTODOSQuery);
+  const getTodosResponse = await database.all(getTODOSQuery);
   response.status(200);
-  response.send(getBooksResponse);
+  response.send(getTodosResponse);
+});
+
+app.get("/todos/:todoId/", async (request, response) => {
+  const { todoId } = request.params;
+  const getTodoQuery = `
+        SELECT
+        *
+        FROM
+         todo
+        WHERE todo.id like '${todoId}';    
+    `;
+  const getTodoResponse = await database.get(getTodoQuery);
+  response.status(200);
+  response.send(getTodoResponse);
 });
